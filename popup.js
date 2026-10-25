@@ -1,0 +1,4 @@
+const $=id=>document.getElementById(id);
+(async()=>{const s=await chrome.storage.local.get(['wingoSnapshotRecordsV2','lastCaptureAt','lastCaptureUrl']);const records=s.wingoSnapshotRecordsV2||[];$('count').textContent=records.length.toLocaleString();$('last').textContent=s.lastCaptureAt?new Date(s.lastCaptureAt).toLocaleTimeString():'Waiting…';$('status').textContent=s.lastCaptureUrl?`Last source: ${s.lastCaptureUrl}`:'Open the game page and let its API requests run.';})();
+$('dashboard').onclick=()=>chrome.tabs.create({url:chrome.runtime.getURL('dashboard/index.html')});
+$('export').onclick=async()=>{const r=await chrome.storage.local.get('wingoSnapshotRecordsV2');const blob=new Blob([JSON.stringify(r.wingoSnapshotRecordsV2||[],null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);chrome.downloads.download({url,filename:'wingo-snapshot-records.json',saveAs:true});};
